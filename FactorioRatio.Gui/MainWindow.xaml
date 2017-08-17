@@ -1,0 +1,72 @@
+﻿<Window x:Class="FactorioRatio.Gui.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:vm="clr-namespace:FactorioRatio.Gui.ViewModels"
+        mc:Ignorable="d"
+        d:DataContext="{d:DesignInstance vm:MainWindowVm}"
+        Title="MainWindow" Height="350" Width="525">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <ListBox Grid.Column="0" ItemsSource="{Binding Path=ItemDefs}" SelectedItem="{Binding Path=SelectedItem}">
+            <ListBox.ItemTemplate>
+                <DataTemplate DataType="{x:Type vm:Recipe}">
+                    <StackPanel>
+                        <TextBlock Text="{Binding Path=Name}" />
+                        <TextBlock Text="{Binding Path=ConstructTime}" />
+                    </StackPanel>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+        <Grid Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <Grid Margin="10">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <TextBlock Text="{Binding Path=Factor, StringFormat='{}x{0}'}" />
+                <Slider Margin="10 0 0 0" Grid.Column="1" Minimum="1" Maximum="30" TickFrequency="0.5" Value="{Binding Path=Factor}" />
+            </Grid>
+            <TreeView Grid.Row="1" ItemsSource="{Binding Path=Root.Nodes}">
+                <TreeView.ItemTemplate>
+                    <HierarchicalDataTemplate ItemsSource="{Binding Path=Nodes}">
+                        <StackPanel DataContext="{Binding Path=Cost}">
+                            <TextBlock Text="{Binding Path=ResourceName}" />
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock FontWeight="Bold" Text="{Binding Path=NumberOfFactory, StringFormat='{}{0} factory'}" />
+                                <TextBlock Margin="10 0 0 0" Foreground="DimGray" Text="{Binding Path=ItemPerMinute, StringFormat='{}{0}/min'}" />
+                            </StackPanel>
+                        </StackPanel>
+                    </HierarchicalDataTemplate>
+                </TreeView.ItemTemplate>
+            </TreeView>
+            <ListBox Grid.Row="2" ItemsSource="{Binding Path=Factories}">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel>
+                            <TextBlock Text="{Binding Path=ResourceName}" />
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock x:Name="XamlFactoryTextBlock" FontWeight="Bold" Text="{Binding Path=NumberOfFactory, StringFormat='{}{0} factory'}" />
+                                <TextBlock Margin="10 0 0 0" Foreground="DimGray" Text="{Binding Path=ItemPerMinute, StringFormat='{}{0}/min'}" />
+                            </StackPanel>
+                        </StackPanel>
+                        <DataTemplate.Triggers>
+                            <DataTrigger Binding="{Binding IsNumberOfFactoryRound}" Value="False">
+                                <Setter TargetName="XamlFactoryTextBlock" Property="Foreground" Value="Red" />
+                            </DataTrigger>
+                        </DataTemplate.Triggers>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </Grid>
+    </Grid>
+</Window>

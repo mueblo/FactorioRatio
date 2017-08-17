@@ -1,0 +1,5 @@
+packages/
+FactorioRatio.Gui/obj/
+FactorioRatio.Gui/bin/
+.vs/
+.idea/
